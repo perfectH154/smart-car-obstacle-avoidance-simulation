@@ -8,10 +8,13 @@
 - `l150ThreeRanges.m`：主模型调用的虚拟雷达函数，返回三个方向最近的障碍物距离。
 - `L150_Collision_Check.m`：可选的轨迹间隙检查脚本，需要工作区里有 `xy` 矩阵（第一列 x、第二列 y，单位米）。车身按半径 0.20 m 的圆近似，结果用于快速检查。
 - `models/ackermann02.slx`：较早的 Ackermann 避障模型版本，可与主模型对照。
+- `models/L150_Path_Follow.slx`：带路径跟踪、动态雷达避障和安全停车子系统的模型；它调用下面的 `l150DynamicFront.m`，同时包含原有的三向测距逻辑。
 - `planning/L150_Path_Plannin.m`：在占据栅格地图上运行 Hybrid A* 规划并绘制路径。
 - `planning/L150_Path.mat`：保存的路径数据，包含 `waypoints`（126×2）、`directions`（126×1）、`startPose` 和 `goalPose`。
+- `planning/L150_Replan_Test.m`：在出现新障碍物后演示 Hybrid A* 重新规划；运行前需要工作区里有停车位姿 `stopPose`。
 - `sensing/LidarTest.m`：独立的虚拟雷达场景测试，绘制地图、扫描结果和前向距离曲线。
 - `sensing/l150FrontRange.m`：返回虚拟雷达正前方左右各 10° 范围内的最近障碍物距离。
+- `sensing/l150DynamicFront.m`：在仿真进行到 15 秒时向地图加入新障碍物，并返回车头左右各 15° 内的最近测距。
 
 ## 运行
 
