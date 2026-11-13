@@ -90,6 +90,7 @@
 ### 闭环模型与路径跟踪
 
 - `models/L150_Closed_Loop.slx`：基于雷达感知地图的自主避障闭环模型。
+- `models/L150_Closed_Loop2.slx`：预设障碍物地图的闭环重规划版本，可与感知地图版对照。
 - `models/L150_Auto_Segments.slx`：分段路径跟踪与自动换挡模型。
 - `models/L150_Path_Follow.slx`：基础路径跟踪模型。
 - `models/L150_Reverse_Test.slx`：倒车跟踪测试模型。
