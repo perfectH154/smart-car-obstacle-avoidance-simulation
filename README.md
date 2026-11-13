@@ -11,10 +11,12 @@
 - `models/L150_Path_Follow.slx`：带路径跟踪、动态雷达避障和安全停车子系统的模型；它调用 `l150DynamicFront.m`，同时包含原有的三向测距逻辑。
 - `models/L150_Reverse_Test.slx`：前进/倒车避障测试模型，使用虚拟雷达分别测量车头和车尾方向。
 - `models/L150_Auto_Segments.slx`：路径分段和行驶方向管理模型，用于按前进、倒车路段组织路线。
+- `models/L150_Closed_Loop.slx`：闭环动态重规划模型；新障碍物出现后停车，调用自动规划函数并切换到新分段路线。
 - `planning/L150_Path_Plannin.m`：在占据栅格地图上运行 Hybrid A* 规划并绘制路径。
 - `planning/L150_Path.mat`：保存的路径数据，包含 `waypoints`（126×2）、`directions`（126×1）、`startPose` 和 `goalPose`。
 - `planning/L150_Replan_Test.m`：在出现新障碍物后用 Hybrid A* 重新规划，允许前进和倒车，并按行驶方向生成速度计划；运行前需要工作区里有停车位姿 `stopPose`。
 - `planning/L150_Replan_Path.mat`：重新规划脚本的结果文件，保存新航点、行驶方向、速度计划和方向切换位置。
+- `planning/l150AutoReplan.m`：为闭环模型规划前进/倒车的新路线，并整理成固定大小的分段数组供 Simulink 使用。
 - `sensing/LidarTest.m`：独立的虚拟雷达场景测试，绘制地图、扫描结果和前向距离曲线。
 - `sensing/l150FrontRange.m`：返回虚拟雷达正前方左右各 10° 范围内的最近障碍物距离。
 - `sensing/l150DynamicFront.m`：在仿真进行到 15 秒时向地图加入新障碍物，并返回车头左右各 15° 内的最近测距。
@@ -22,7 +24,7 @@
 
 ## 运行
 
-在 MATLAB 中打开 `ackermannbizhang.slx`，并把仓库根目录加入 MATLAB Path，然后运行模型。路径跟踪、倒车测试和自动分段模型也可分别从 `models/` 打开；它们会调用 `sensing/` 中相应的测距函数。路径规划脚本和雷达测试脚本可以分别打开运行；它们各自创建示例地图。重新规划脚本需要先在工作区提供 `stopPose`，运行后会保存 `planning/L150_Replan_Path.mat`。
+在 MATLAB 中先进入仓库根目录并运行 `addpath(genpath(pwd))`，这样 `planning/` 和 `sensing/` 中的辅助函数也会加入 MATLAB Path。然后打开 `ackermannbizhang.slx` 运行主模型。路径跟踪、倒车测试、自动分段和闭环重规划模型也可分别从 `models/` 打开；它们会调用 `sensing/` 和 `planning/` 中相应的函数。路径规划脚本和雷达测试脚本可以分别打开运行；它们各自创建示例地图。重新规划脚本需要先在工作区提供 `stopPose`，运行后会保存 `planning/L150_Replan_Path.mat`。
 
 主模型文件由 MATLAB R2026a 保存。模型和脚本用到 Ackermann 运动学、占据栅格地图、距离传感器及 Hybrid A* 等组件；若 MATLAB 提示缺少组件，请检查对应工具箱是否已安装。路径规划脚本会生成新路径；`L150_Path.mat` 保存的是一组已有起终点和航点数据，主避障模型不会自动加载它。
 
