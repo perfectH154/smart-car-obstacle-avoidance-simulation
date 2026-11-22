@@ -132,6 +132,8 @@ MCL 粒子滤波 ← 里程计数据 + 后续雷达扫描
 - 另一次仅保留随机里程计噪声、未加入额外系统偏差的测试，记录的最终位置误差约为 **0.0036 m**。
 - 在加入 1% 速度偏差和 0.001 rad/s 角速度偏差的测试中，真实终点为 **(5.013, 2.458) m**，MCL 估计终点为 **(5.033, 2.531) m**，最终位置误差约为 **0.076 m**。
 
+- 独立 L150 初始匹配验证在合成位姿 `[1, 3, 0]` 下恢复了相同位姿，误差为 **0.000 m / 0.0°**，平均扫描残差为 **0.007 m**。此结果只验证该合成地图和扫描输入下的匹配流程。
+
 以上均为单次仿真结果，不代表不同地图、起点或噪声条件下的平均定位精度。
 
 运行定位脚本时会生成地图、雷达扫描、轨迹对比、误差曲线和粒子分布图。当前 iCloud 项目目录未找到单独导出的结果图片，因此仓库暂不嵌入静态截图。
@@ -148,6 +150,7 @@ MCL 粒子滤波 ← 里程计数据 + 后续雷达扫描
 
 - `localization/localization_demo.m`：单阶段 MCL 对照测试，并生成示例地图和误差图。
 - `localization/localization_two_stage.m`：两阶段初始位姿搜索与 MCL 持续定位。
+- `localization/L150_Localization_Validation.m`：在独立 8×6 m 测试地图上验证 L150 初始雷达扫描匹配。
 
 `localization_two_stage.m` 会自行建立包含更多特征物的地图；`localization_map.mat` 是 `localization_demo.m` 保存的示例地图。
 
@@ -179,6 +182,8 @@ MCL 粒子滤波 ← 里程计数据 + 后续雷达扫描
 
 - `localization/localization_demo.m`：已知大致初始位姿下的局部 MCL 基线测试。
 - `localization/localization_two_stage.m`：雷达全地图匹配初始化并使用 MCL 持续定位。
+- `localization/L150LocalizationMap.m`、`L150LocalizationScan.m`：生成独立测试地图与 360° 合成雷达扫描。
+- `localization/L150_Localization_Validation.m`：从完整扫描进行粗到细的初始位姿全局匹配；地图含边界墙和非对称固定标志物，实车使用前应替换为已知场地地图。
 - `localization/localization_map.mat`：单阶段定位示例地图；两阶段脚本会自行建立测试地图。
 
 ## 7. 当前局限性
